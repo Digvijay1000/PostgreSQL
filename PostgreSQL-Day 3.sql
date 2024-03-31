@@ -204,7 +204,7 @@ FROM payment
 WHERE DATE(payment_date) IN ('2020-04-28', '2020-04-29', '2020-04-30')
 GROUP BY customer_id, DATE(payment_date)
 HAVING COUNT(*)>1
-ORDER BY avg_amount DESC;
+ORDER BY avg_amount DESC
 
 
 
