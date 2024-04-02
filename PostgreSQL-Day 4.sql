@@ -292,6 +292,8 @@ ORDER BY total_payment_amount DESC;
 
 > syntax:
 		TO_CHAR (date/time/interval/number, format)
+		
+> https://www.postgresql.org/docs/current/functions-formatting.html
 */
 -- EXAMPLE
 SELECT * FROM rental;
@@ -304,13 +306,104 @@ SELECT
 TO_CHAR(rental_date, 'MM-YYYY')
 FROM rental;
 
+SELECT
+SUM(amount),
+TO_CHAR(payment_date, 'Day Month YYYY')
+FROM payment
+GROUP BY TO_CHAR(payment_date, 'Day Month YYYY');
 
+SELECT
+SUM(amount),
+TO_CHAR(payment_date, 'Dy Month YYYY')
+FROM payment
+GROUP BY TO_CHAR(payment_date, 'Dy Month YYYY');
 
+-- CHALLENGE 
+-- You need to sum payments and group in the following formats:
+-- 1. Fri,24/01/2020
 
+SELECT
+SUM(amount) AS total_amount,
+TO_CHAR(payment_date, 'Dy,DD/MM/YYYY') AS day
+FROM payment
+GROUP BY day
+ORDER BY total_amount DESC;
 
+-- 2. May,2020
+SELECT
+SUM(amount) AS total_amount,
+TO_CHAR(payment_date, 'Mon,YYYY') AS month
+FROM payment
+GROUP BY month
+ORDER BY total_amount;
 
+-- 3. Thu,02:44
+-- https://www.postgresql.org/docs/current/functions-formatting.html
+SELECT
+SUM(amount) AS total_amount,
+TO_CHAR(payment_date, 'Dy,HH:MI') AS day
+FROM payment
+GROUP BY day
+ORDER BY total_amount DESC;
 
+/* 7. Function >> INTTERVALS AND TIMESTAMPS
+> 
+> https://www.postgresql.org/docs/current/functions-formatting.html
+*/
+-- EXAMPLE
+SELECT 
+CURRENT_TIMESTAMP,
+rental_date
+FROM rental;
 
+SELECT
+CURRENT_TIMESTAMP,
+CURRENT_TIMESTAMP-return_date
+FROM rental;
 
+SELECT
+CURRENT_TIMESTAMP,
+return_date - rental_date
+FROM rental;
 
+SELECT
+CURRENT_TIMESTAMP,
+return_date - rental_date,
+EXTRACT(day from return_date-rental_date)
+FROM rental;
+
+SELECT
+CURRENT_TIMESTAMP,
+return_date - rental_date,
+EXTRACT(hour from return_date-rental_date)
+FROM rental;
+
+SELECT
+CURRENT_TIMESTAMP,
+return_date - rental_date total_durtaion,
+EXTRACT(day from return_date-rental_date)*24 +
+EXTRACT(hour from return_date-rental_date) || ' Hours' as total_hours
+FROM rental;
+
+-- CHALLANGE
+/*
+1. You need to create a list for the support team of all rental 
+durations of customer with customer_id 35.
+*/
+SELECT * FROM rental;
+
+SELECT
+customer_id,
+return_date - rental_date AS rental_duration
+FROM rental
+WHERE customer_id = 35;
+
+/* 2. Also you need to find out for the suppcity team
+which customer has the longest average rental duration? */
+SELECT
+customer_id,
+AVG(return_date - rental_date) as rental_duration
+FROM rental
+GROUP BY customer_id
+ORDER BY rental_duration DESC;
 
