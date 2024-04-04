@@ -211,14 +211,133 @@ END as tier_list
 FROM film
 WHERE 
 CASE
-		  WHEN rating IN ('PG','PG-13') OR length > 210 THEN 'Great rating or long (tier 1)'
-	      WHEN description LIKE '%Drama%' AND length > 90 THEN 'Long drama (tier 2)'
-	      WHEN description LIKE '%Drama%' THEN 'Shcity drama (tier 3)'
-	      WHEN rental_rate < 1 THEN 'Very cheap (tier 4)'
+	WHEN rating IN ('PG','PG-13') OR length > 210 THEN 'Great rating or long (tier 1)'
+	WHEN description LIKE '%Drama%' AND length > 90 THEN 'Long drama (tier 2)'
+	WHEN description LIKE '%Drama%' THEN 'Shcity drama (tier 3)'
+	WHEN rental_rate < 1 THEN 'Very cheap (tier 4)'
 END is not null;
 
+-- /* 3. CASE WHEN & SUM */
+
+SELECT 
+rating,
+CASE
+	WHEN rating IN ('PG', 'G') THEN 1
+	ELSE 0
+END
+FROM film;
+
+SELECT 
+SUM(CASE
+		WHEN rating IN ('PG', 'G') THEN 1
+		ELSE 0
+	END) AS no_of_ratings_with_g_or_pg
+FROM film;
+
+SELECT 
+rating,
+COUNT(*)
+FROM film
+GROUP BY rating;
+
+-- we want above example output rows into column
+SELECT
+SUM(CASE WHEN rating = 'PG' THEN 1 END) AS "PG",
+SUM(CASE WHEN rating = 'R' THEN 1 END) AS "R",
+SUM(CASE WHEN rating = 'NC-17' THEN 1 END) AS "NC-17",
+SUM(CASE WHEN rating = 'PG-13' THEN 1 END) AS "PG-13",
+SUM(CASE WHEN rating = 'G' THEN 1 END) AS "G"
+FROM film;
+
+/* 4. COALESCE
+
+> Returns first value of a list of values which is not null
+
+> Syntax : 
+			COALESCE (actual_arrival, scheduled_arrival)
+> note : both columns data type should be same other wise error
+*/
+SELECT 
+actual_arrival-scheduled_arrival
+FROM flights;
+
+SELECT 
+COALESCE(actual_arrival-scheduled_arrival, '0:00')
+FROM flights;
+
+SELECT
+COALESCE(actual_arrival-scheduled_arrival, '1')
+FROM flights;
+
+/* 5. CAST
+
+> Changes the data type of a value
+
+> Syntax : 
+		 CAST (value/column AS data type)
+*/
+-- Example
+SELECT
+COALESCE(CAST(actual_arrival-scheduled_arrival AS VARCHAR), 'Not Arrived')
+FROM flights;
+
+SELECT
+LENGTH(CAST(actual_arrival AS VARCHAR))
+FROM flights;
+
+SELECT 
+ticket_no as original_data_type,
+CAST(ticket_no as bigint) as modified_data_type
+FROM tickets;
+
+SELECT
+passenger_id -- CONTAIN WHITESPACE SO IT WILL NOT POSSIBLE IN CAST SO FOR THAT WE NEED TO REPLACE WHITESPACES AND THEN CAST
+-- CAST(passenger_id, AS bigint)
+FROM tickets;
+
+-- CHALLANGE after COALESCE & CAST
+/* FILL rental_date columns null with "no return"
+			SELECT
+			rental_date,
+			return_date
+			FROM rental
+			ORDER BY rental_date DESC
+*/
+SELECT
+rental_date,
+COALESCE(CAST(return_date AS VARCHAR), 'not return')
+FROM rental
+ORDER BY rental_date DESC;
 
 
+/* 6. REPLACE
 
+> Replaces text from a string in a column with another text
 
+> Syntax : 
+		 REPLACE (column, old_text, new_text)
+*/
+-- Example
+SELECT
+* 
+FROM tickets;
 
+--Example: WHITEPACE replacement in passenger_id
+SELECT
+REPLACE(passenger_id, ' ', '')
+FROM tickets;
+
+-- Example : Now passenger_id data tye changed to bigint
+SELECT
+CAST(REPLACE(passenger_id, ' ', '') AS bigint)
+FROM tickets;
+
+-- Example: replace flight_noo with int
+SELECT
+flight_no
+FROM flights;
+
+SELECT
+flight_no,
+CAST(REPLACE(flight_no, 'PG', '' ) as int)
+FROM flights;
