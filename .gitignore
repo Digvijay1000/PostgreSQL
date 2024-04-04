@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 # Folders
-Resources/
+Resources_Nikolai_Schuler/
 # Distribution / packaging
 .Python
 build/
