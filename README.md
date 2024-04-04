@@ -1,2 +1,2 @@
-# PostgreSQL : Nikolai Schuler
+# PostgreSQL
 15 Day's PostgreSQL 
