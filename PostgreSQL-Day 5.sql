@@ -341,3 +341,5 @@ SELECT
 flight_no,
 CAST(REPLACE(flight_no, 'PG', '' ) as int)
 FROM flights;
+
+---------------------------------------------------------------------------
