@@ -235,9 +235,9 @@ RIGHT JOIN address a
 ON a.address_id = c.address_id
 WHERE c.customer_id IS null;
 
-/* 5. Multiple join conditions (INNER JOIN)
-> JOINS THE TWO TABLE WITH MULTIPLE COLUMNS WITH CONDITION FROM RIGHT TABLE AND MATCHING DATA FROM LEFT TABLE
+-- MULTIPLE JOIN CONDITIONS --
 
+/* 
 > SYNTAX: 
         SELECT * FROM TableA a
 		INNER JOIN TableB b
@@ -259,5 +259,81 @@ WHERE c.customer_id IS null;
 
 */
 -- EXAMPLE
+SELECT * FROM ticket_flights;
+SELECT * FROM boarding_passes;
+
+--Create Joins between the table and calculate average price for the different seat_no
+SELECT seat_no, ROUND(AVG(amount),2) FROM boarding_passes b
+LEFT JOIN ticket_flights t
+ON b.ticket_no = t.ticket_no
+AND b.flight_id = t.flight_id
+GROUP BY seat_no
+ORDER BY 2 DESC;
+
+-- JOINING MULTIPLE TABLES
+
+SELECT * FROM tickets; -- ticket_no, passenger_name
+SELECT * FROM flights; -- ticket_no, flight_id, scheduled_arrival
+SELECT * FROM ticket_flights, -- ticket_no, flight_id
+
+-- we want ticket_no, passenger_name and scheduled_arrival
+SELECT t.ticket_no, passenger_name,f.scheduled_arrival FROM tickets t
+INNER JOIN ticket_flights tf
+ON t.ticket_no = tf.ticket_no
+INNER JOIN flights f
+ON f.flight_id = tf.flight_id;
+
+-- CHALLANGE ON MULTIPLE TABLE JOIN
+/*
+1. The company wants customize their campaigns to customers depending on the country they are from.
+
+Which customers are from Brazil?
+
+Write a query to get first_name, last_name, email and the country from all customers from Brazil.
+*/
+SELECT first_name, last_name, email,  con.country FROM address a
+INNER JOIN customer c
+ON a.address_id = c.address_id
+INNER JOIN city ct
+ON a.city_id = ct.city_id
+INNER JOIN country con
+ON ct.country_id = con.country_id
+WHERE country = 'Brazil'
+
+-- 2. Which passenger (passenger_name) has spent most amount in their bookings (total_amount)?
+-- Answer: ALEKSANDR IVANOV with 80964000.00
+SELECT t.passenger_name, SUM(b.total_amount) FROM bookings b
+INNER JOIN tickets t
+ON b.book_ref = t.book_ref
+GROUP BY t.passenger_name
+ORDER BY SUM(b.total_amount) DESC
+LIMIT 1;
+
+-- 3. Which fare_condition has ALEKSANDR IVANOV used the most?
+-- Answer: Economy 2131 times.
+SELECT fare_conditions, COUNT(*) FROM ticket_flights tf
+INNER JOIN tickets t
+ON tf.ticket_no = t.ticket_no
+WHERE passenger_name = 'ALEKSANDR IVANOV'
+GROUP BY fare_conditions
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+
+-- 4. Which title has GEORGE LINTON rented the most often?
+-- Answer: CADDYSHACK JEDI - 3 times.
+SELECT first_name, last_name, title, COUNT(*)
+FROM customer cu
+INNER JOIN rental re
+ON cu.customer_id = re.customer_id
+INNER JOIN inventory inv
+ON inv.inventory_id=re.inventory_id
+INNER JOIN film fi
+ON fi.film_id = inv.film_id
+WHERE first_name='GEORGE' and last_name='LINTON'
+GROUP BY title, first_name, last_name
+ORDER BY 4 DESC;
+
+
+
 
 
