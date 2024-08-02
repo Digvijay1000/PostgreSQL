@@ -1,10 +1,9 @@
-ALTER DATABASE greencycles SET timezone TO 'Europe/Berlin';
--- DAY 2
+-- DAY 2 (Basic)
 
 /* 1.WHERE 
 
-1. Used to FILTER the data in the ouutput
-2. Always after FROM
+> Used to FILTER the data in the output
+> Always after FROM
 
 Syntax: SELECT
 		column_name1,
@@ -12,6 +11,9 @@ Syntax: SELECT
 		FROM table_name
 		WHERE condition
 */
+
+-- To maintain accuracy while performing queries we are seting timestamp
+ALTER DATABASE greencycles SET timezone TO 'Europe/Berlin';
 
 SELECT 
 * 
