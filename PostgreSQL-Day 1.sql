@@ -231,6 +231,6 @@ SELECT
 last_name,
 first_name
 FROM customer
-ORDER BY last_name DESC, first_name;
+ORDER BY last_name DESC, first_name DESC;
 
 -- Day 1 Finish -- 
