@@ -12,7 +12,7 @@ Syntax: SELECT
 		WHERE condition
 */
 
--- To maintain accuracy while performing queries we are seting timestamp
+-- To maintain accuracy while performing queries we are setting timestamp
 ALTER DATABASE greencycles SET timezone TO 'Europe/Berlin';
 
 SELECT 
@@ -169,17 +169,17 @@ FROM payment
 WHERE amount = 10.99
 OR amount = 9.99;
 
--- SELECT
--- *
--- FROM payment
--- WHERE amount = 10.99 OR 9.99 -- Not Allowed
+SELECT
+*
+FROM payment
+WHERE amount = 10.99 OR 9.99; -- Not Allowed
 
 SELECT
 *
 FROM payment
 WHERE amount = 10.99
 OR amount = 9.99
-AND customer_id = 426; -- not working well
+AND customer_id = 426; -- not working well meance required answer not coming due paranthesis;
 
 SELECT
 *
