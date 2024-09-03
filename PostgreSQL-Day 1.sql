@@ -48,7 +48,7 @@ SYNTAX : SELECT
 		 column_name1,
 		 column_name2,
 		 FROM table_name
-		 ORDER BY column_name1;
+		 ORDER BY column_name1, column_name2;
 */
 
 -- Example 
